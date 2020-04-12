@@ -88,6 +88,7 @@ def Sharing(ftpc, max_buffer = 4096):
 
 def SendFile(f, addr):
     data = f.read(4096)
+    print("Sent data to : {}".format(addr))
     address = addr
     while(data):
         if(ftpc.sendto(data.encode(), address)):  
@@ -98,26 +99,29 @@ def SendFile(f, addr):
     
 def Download(filename, port): 
     address = ('0.0.0.0', int(port))
-    timeout = 10.0
+    timeout = 5.0
     start_time = time.clock()
     i = (receiver.sendto(filename.encode(), address))
     print("{} is requesting {} to download {}".format(receiver.getsockname()[1],port, filename))
 
     f = open(filename, 'wb')
-    inputs = [receiver, 0]
+    inputs = [receiver]
     while inputs:
-        readable, writeable, exceptional = select.select(inputs, [], [])
+        readable, writeable, exceptional = select.select(inputs, [], [], timeout)
         for i in readable:
-            print("got some input")
+            print("input")
             if(i ==0):
                 print("reading from terminal")
+                f.close()
+                return 1
             elif(i is receiver):
                 data, addr = receiver.recvfrom(4096)
-                f.write(data.decode())
-                f.close()
+                f.write(data)
                 break
             else:
                 print(i)
+        if not readable:
+            break
     
     f.close()
     print("finished download")

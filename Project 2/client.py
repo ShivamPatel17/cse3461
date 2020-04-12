@@ -99,7 +99,7 @@ def SendFile(f, addr):
     
 def Download(filename, port): 
     address = ('0.0.0.0', int(port))
-    timeout = 10.0
+    timeout = 5.0
     start_time = time.clock()
     i = (receiver.sendto(filename.encode(), address))
     print("{} is requesting {} to download {}".format(receiver.getsockname()[1],port, filename))
@@ -120,6 +120,8 @@ def Download(filename, port):
                 break
             else:
                 print(i)
+        if not readable:
+            break
     
     f.close()
     print("finished download")
