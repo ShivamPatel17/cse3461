@@ -37,9 +37,12 @@ def RunServer():
 
 #addr[0] is IP and addr[1] is port
 def HandleRequest(server_socket, data, addr, max_buffer = 4096):
-    request = data.decode().split(' ', 1)
-    command = request[0]
-    command = command.upper()
+    request = data.decode()
+    data = request.split(':', 1)
+    client_server = data[1]
+    request = data[0].split(' ', 1)
+    command = request[0].upper()
+    #print(client_server)
     if(len(request)>1):
         #args are the files names, if present
         args = request[1]
@@ -51,23 +54,24 @@ def HandleRequest(server_socket, data, addr, max_buffer = 4096):
     elif(command == 'SHARE'):
         if(len(request)>1):
             files = args.split(' ')
-            AddFileAddresses(files, addr)
-            AddAddressFiles(files, addr)
+            AddFileAddresses(files, client_server)
+            AddAddressFiles(files, client_server)
     #send client the files available for download
     elif(command == 'LIST'):
         file_list = []
         for address in addr_files.keys():
-            if(address != addr):
+            if(address != client_server):
                 file_list.extend(addr_files[address])
         response = (1, set(file_list))
         server_socket.sendto(pickle.dumps(response), addr)
     #send client the address of where to download a file
     elif(command == 'DOWNLOAD'):
         if(len(request)==2):
+            file_addr[args]
             if(args in file_addr.keys()):
                 address = []
                 for add in file_addr[args]:
-                    if(add!=addr):
+                    if(add!=client_server):
                         address.append(add)
                 response = (2, address, args)
             else:
@@ -96,7 +100,6 @@ def AddAddressFiles(files, addr):
         addr_files[addr].update(files)
     else:
         addr_files[addr] = files
-
 
 if __name__ == "__main__":
     main()
