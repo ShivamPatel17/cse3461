@@ -1,0 +1,34 @@
+go to stdlinux and type subscribe to make sure you're running python-3
+    if not:
+        1) open a terminal
+        2) type "subscribe"
+        3) subscribe to #17 (python-3)
+
+HOW TO RUN THE IM PLATFORM
+ 1) open a terminal
+ 2) change directorys to the Project 1 folder (whereever you extracted the project)
+ 3) type python3 to make sure you have python3. type quit() to exit
+ 4) in the same terminal where the "server.py" file is, type:
+        python3 server.py
+ 5) in another terminal, change directory to where the "client.py" file exists (should be same as before)
+ 6) in this terminal type:
+        python3 client.py
+*note* for each additional client you'd like to run, repeat steps 5 and 6 per client
+
+
+SERVER
+- nothing needs to be typed here
+- the server display any new connections (ip and port)
+    - if the client logs in, the server will also display the username in addition to ip and port
+- the server will also show the commmand issued by the client. Valid commmands are:
+    1) Register <username> <password>
+    2) Login <username> <password>
+    3) List (this will list all the active users on the server)
+    4) Message <username> <msg> (the user must be active)
+    5) Logout <username>
+        - chose to not allow a user to log another user out since this wouldn't make sense
+        - thus, <username> must be the username of the currently logged in client
+
+
+client
+- can issue commands specified by the server
